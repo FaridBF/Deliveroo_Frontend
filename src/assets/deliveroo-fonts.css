@@ -1,0 +1,5 @@
+@font-face {
+  font-family: 'imb-plex-sans';
+  src: url('./deliveroo-fonts/IBMPlexSans-Bold.woff') format('woff')
+    url('./deliveroo-fonts/IBMPlexSans-Bold.woff2') format('woff2');
+}
