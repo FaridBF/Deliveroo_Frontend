@@ -3,21 +3,34 @@ import './App.css';
 import axios from 'axios';
 
 import Header from './components/Header';
-// import Box from './components/Box';
+import CartItem from './components/CartItem';
 
 import visuelIndisponible from './assets/deliveroo-images/visuel-indisponible-650.png';
 
 function App() {
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [cart, setCart] = useState([]);
 
   const fetchData = async () => {
-    // reqûete réalisée directement auprès de la data déployé sur heroku
     const response = await axios.get(
       'https://replique-deliveroo-backend.herokuapp.com/'
     );
     setData(response.data);
     setIsLoading(false);
+  };
+
+  const handleClickMeal = (meal) => {
+    const cartTemp = [
+      ...cart,
+      {
+        id: meal.id,
+        title: meal.title,
+        price: meal.price,
+        quantity: 1
+      }
+    ];
+    setCart(cartTemp);
   };
 
   useEffect(() => {
@@ -53,16 +66,22 @@ function App() {
       <section className='container'>
         <section className='menu'>
           <div className='categorie-left'>
-            {data.categories.map((categorie) => {
+            {data.categories.map((categorie, index) => {
               return (
                 categorie.meals.length > 0 && (
-                  <div className='sub-categorie'>
-                    <h2> {categorie.name}</h2>
+                  <div className='sub-categorie' key={index}>
+                    <h2>{categorie.name}</h2>
                     <div className='meals-flex-container'>
                       {categorie.meals.map((meal) => {
-                        console.log(meal.picture);
                         return (
-                          <div className='item'>
+                          <div
+                            className='item'
+                            key={meal.id}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleClickMeal(meal);
+                            }}
+                          >
                             <div className='text'>
                               <h3>{meal.title}</h3>
                               <p className='item-description'>
@@ -70,13 +89,13 @@ function App() {
                               </p>
                               <p className='item-description'>
                                 {meal.price} €
-                                {meal.popular === true && (
-                                  <p
+                                {meal.popular && (
+                                  <span
                                     className='popular'
                                     style={{ color: 'orange' }}
                                   >
                                     Populaire
-                                  </p>
+                                  </span>
                                 )}
                               </p>
                             </div>
@@ -102,17 +121,12 @@ function App() {
           <div className='categorie-right'>
             <div className='cart'>
               <button className='buttonValidation'>Valider mon panier</button>
-              <p>
-                Brunch authentique 1 personne <span>prix</span>
-              </p>
-              <p>
-                Sous-total <span>prix</span>
-              </p>
-
-              <p>
-                Frais de livraison <span>prix</span>
-              </p>
-              <p>Total</p>
+              <div>
+                {cart.map((product) => {
+                  return <CartItem product={product} />;
+                })}
+                <p>Total</p>
+              </div>
             </div>
           </div>
         </section>

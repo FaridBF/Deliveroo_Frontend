@@ -185,10 +185,9 @@ h3 {
 
 .categorie-right {
   width: 30%;
-  display: flex;
+  padding-left: 20px;
   margin-top: 20px;
-  height: 370px;
-  justify-content: flex-end;
+  align-self: auto;
 }
 
 .cart {
@@ -196,6 +195,8 @@ h3 {
   background-color: rgb(255 255 255);
   padding: 10px;
   border-radius: 15px;
+  position: sticky;
+  top: 0;
 }
 
 .buttonValidation {
